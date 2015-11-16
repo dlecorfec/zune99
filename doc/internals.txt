@@ -1,0 +1,79 @@
+Some notes about internal design:
+* All widgets are gadgets (no window). Only a Window object
+  has one.
+
+* you ALWAYS need to know this (borrowed from MUIdev.guide) :
+
+  Things between brackets might be called zero or more times
+  for the same object.
+
+     OM_NEW; /* you dont know anything about display environment here */
+     {
+        MUIM_Setup;      /* information about display, still no window */
+        MUIM_AskMinMax;  /* tell me your min/max dimensions */
+        [ window is opened here ]
+        {
+           MUIM_Show;    /* add yourself to the window, don't yet draw */
+           {
+              MUIM_Draw;     /* draw yourself */
+           }
+           MUIM_Hide;    /* remove yourself from the window */
+        }
+        [ window is closed here ]
+        MUIM_Cleanup;    /* free any display dependant data */
+     }
+     OM_DISPOSE; /* kill yourself completely */
+
+* Application object has one or more Window childs.
+  Window has one Area child.
+  Group has one or more Area childs.
+  See mui.h for ASCII class tree, and muiundoc.h for a hidden part.
+
+* MUIA_ApplicationObject is valid between MUIM_Setup/MUIM_Cleanup.
+  Here is why : object are created (OM_NEW) before or within
+  the Application object OM_NEW. Therefore they can't know
+  application object at creation time.
+  However, all Application childs (init with MUIA_Application_Window,
+  or given later with OM_ADDMEMBER) are sent a method MUIM_ConnectParent
+  with the app object as parameter.
+  In turn, the windows send MUIM_ConnectParentWindow to their child.
+  If window child is a group, it will dispatch a MUIM_ConnectParent
+  to its childs.
+  Then before MUIM_Setup, application object is set everywhere.
+
+* In every Notify-derived object (ie all MUI objects), there is a pointer
+  mnd_GlobalInfo. Where is this structure ?
+  In the Application object. This pointer is initialized in Application
+  OM_NEW, and got by childs in their MUIM_ConnectParent implementation.
+  They know their parent, their parent knows its GlobalInfo ptr, thus
+  childs know their GlobalInfo ptr too. And remember, all this knowledge
+  happens between OM_NEW and MUIM_Setup.
+  Disconnecting from parent make you lose both parent and GlobalInfo
+  (because you are no more in an Application object tree).
+
+* Area mad_RenderInfo is a pointer to a RenderInfo structure located
+  in the Window object of this Area. It is known by the window childs
+  the same way that the application object, between OM_NEW and MUIM_Setup.
+  This is why Window send MUIM_ConnectParentWindow, and groups send
+  MUIM_ConnectParent : groups copy the render info pointer, that
+  window doesn't have (not being a subclass of Area).
+  
+* Lists and GLists :
+  Because the project started long before I heared of glib, in 1997,
+  and for other reasons, Ami Lists and Nodes are implemented, and
+  used for some of the lists. This is good for compatibility with
+  old code and old API.
+  GLists are used in some newer code (text engine ...), for their
+  help when writing code quickly (that's a subjective opinion).
+
+  Main differences: 
+  - Lists keep pointers on both head and tail of list. Good for appending.
+  - Nodes contain both link and user data. Handy to access immediately
+    other nodes.
+  - I never fully understood the lh_TailPred trick :)
+  - GLists keep link separated from user data. Thus no need to
+    create a "derived" Node structure containing the node and the user data.
+    And link allocation is done through some sexy glib allocator :)
+    No need of casts to/from the generic Node and the specialized one.
+  - Given the user data of a GList, you have to find back its node
+    in the list to access other nodes (from a foreach callback function)

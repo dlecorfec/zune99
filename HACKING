@@ -1,0 +1,9 @@
+This means that you will need the usual GNU tools to build these in
+maintainer mode from the CVS tree.  You can basically type
+
+aclocal
+automake --add-missing
+autoconf
+./configure
+make
+

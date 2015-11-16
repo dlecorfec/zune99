@@ -1,0 +1,481 @@
+# Makefile.in generated automatically by automake 1.4a from Makefile.am
+
+# Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
+# This Makefile.in is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+
+SHELL = @SHELL@
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+sbindir = @sbindir@
+libexecdir = @libexecdir@
+datadir = @datadir@
+sysconfdir = @sysconfdir@
+sharedstatedir = @sharedstatedir@
+localstatedir = @localstatedir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
+includedir = @includedir@
+oldincludedir = /usr/include
+
+DESTDIR =
+
+pkgdatadir = $(datadir)/@PACKAGE@
+pkglibdir = $(libdir)/@PACKAGE@
+pkgincludedir = $(includedir)/@PACKAGE@
+
+top_builddir = ..
+
+ACLOCAL = @ACLOCAL@
+AUTOCONF = @AUTOCONF@
+AUTOMAKE = @AUTOMAKE@
+AUTOHEADER = @AUTOHEADER@
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+INSTALL_STRIP_FLAG =
+transform = @program_transform_name@
+
+NORMAL_INSTALL = :
+PRE_INSTALL = :
+POST_INSTALL = :
+NORMAL_UNINSTALL = :
+PRE_UNINSTALL = :
+POST_UNINSTALL = :
+host_alias = @host_alias@
+host_triplet = @host@
+AS = @AS@
+CC = @CC@
+CFLAGS = @CFLAGS@
+CPP = @CPP@
+DLLTOOL = @DLLTOOL@
+GDK_IMLIB_CFLAGS = @GDK_IMLIB_CFLAGS@
+GDK_IMLIB_LIBS = @GDK_IMLIB_LIBS@
+GLIB_CFLAGS = @GLIB_CFLAGS@
+GLIB_CONFIG = @GLIB_CONFIG@
+GLIB_LIBS = @GLIB_LIBS@
+GTK_CFLAGS = @GTK_CFLAGS@
+GTK_CONFIG = @GTK_CONFIG@
+GTK_LIBS = @GTK_LIBS@
+IMLIB_CFLAGS = @IMLIB_CFLAGS@
+IMLIB_CONFIG = @IMLIB_CONFIG@
+IMLIB_LIBS = @IMLIB_LIBS@
+LD = @LD@
+LIBTOOL = @LIBTOOL@
+LN_S = @LN_S@
+LT_AGE = @LT_AGE@
+LT_CURRENT = @LT_CURRENT@
+LT_RELEASE = @LT_RELEASE@
+LT_REVISION = @LT_REVISION@
+MAKEINFO = @MAKEINFO@
+NM = @NM@
+OBJDUMP = @OBJDUMP@
+PACKAGE = @PACKAGE@
+RANLIB = @RANLIB@
+VERSION = @VERSION@
+ZUNE_BINARY_AGE = @ZUNE_BINARY_AGE@
+ZUNE_CFLAGS = @ZUNE_CFLAGS@
+ZUNE_INTERFACE_AGE = @ZUNE_INTERFACE_AGE@
+ZUNE_LIBS = @ZUNE_LIBS@
+ZUNE_MAJOR_VERSION = @ZUNE_MAJOR_VERSION@
+ZUNE_MICRO_VERSION = @ZUNE_MICRO_VERSION@
+ZUNE_MINOR_VERSION = @ZUNE_MINOR_VERSION@
+ZUNE_VERSION = @ZUNE_VERSION@
+glib_cflags = @glib_cflags@
+glib_libs = @glib_libs@
+glib_thread_cflags = @glib_thread_cflags@
+glib_thread_libs = @glib_thread_libs@
+
+OMIT_DEPENDENCIES = mui.h muimaster_protos.h
+
+noinst_PROGRAMS =  ttt_demo lay2 lay3 slider input1
+
+
+EXTRA_DIST =  tictactoe_mcc.h notif1.c notif2.c fami1.c lay1.c pages.c dynamic.c images.c
+
+
+DEPS =  	$(top_builddir)/src/muimaster/libmuimaster.la 	$(top_builddir)/src/amilist/libamilist.la 	$(top_builddir)/src/tagitem/libtagitem.la
+
+
+LDADDS =  $(top_builddir)/src/muimaster/libmuimaster.la $(top_builddir)/src/amilist/libamilist.la $(top_builddir)/src/tagitem/libtagitem.la @ZUNE_LIBS@ -lm
+
+
+DEPENDENCIES = $(DEPS)
+LDADD = $(LDADDS)
+INCLUDES = -I$(top_srcdir)/include $(ZUNE_CFLAGS)
+
+MCCLDFLAGS = -avoid-version -module
+MCCLIBADD = $(LDADDS)
+
+libTicTacToe_mcc_la_SOURCES = tictactoe.c
+libTicTacToe_mcc_la_LDFLAGS = $(MCCLDFLAGS)
+libTicTacToe_mcc_la_LIBADD = $(MCCLIBADD)
+
+lib_LTLIBRARIES =  libTicTacToe_mcc.la
+
+mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+CONFIG_HEADER = ../config.h
+CONFIG_CLEAN_FILES = 
+LTLIBRARIES =  $(lib_LTLIBRARIES)
+
+
+DEFS = @DEFS@ -I. -I$(srcdir) -I..
+CPPFLAGS = @CPPFLAGS@
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@
+X_CFLAGS = @X_CFLAGS@
+X_LIBS = @X_LIBS@
+X_EXTRA_LIBS = @X_EXTRA_LIBS@
+X_PRE_LIBS = @X_PRE_LIBS@
+libTicTacToe_mcc_la_DEPENDENCIES =  \
+$(top_builddir)/src/muimaster/libmuimaster.la \
+$(top_builddir)/src/amilist/libamilist.la \
+$(top_builddir)/src/tagitem/libtagitem.la
+libTicTacToe_mcc_la_OBJECTS =  tictactoe.lo
+PROGRAMS =  $(noinst_PROGRAMS)
+
+ttt_demo_SOURCES = ttt_demo.c
+ttt_demo_OBJECTS =  ttt_demo.o
+ttt_demo_LDADD = $(LDADD)
+ttt_demo_DEPENDENCIES =  $(top_builddir)/src/muimaster/libmuimaster.la \
+$(top_builddir)/src/amilist/libamilist.la \
+$(top_builddir)/src/tagitem/libtagitem.la
+ttt_demo_LDFLAGS = 
+lay2_SOURCES = lay2.c
+lay2_OBJECTS =  lay2.o
+lay2_LDADD = $(LDADD)
+lay2_DEPENDENCIES =  $(top_builddir)/src/muimaster/libmuimaster.la \
+$(top_builddir)/src/amilist/libamilist.la \
+$(top_builddir)/src/tagitem/libtagitem.la
+lay2_LDFLAGS = 
+lay3_SOURCES = lay3.c
+lay3_OBJECTS =  lay3.o
+lay3_LDADD = $(LDADD)
+lay3_DEPENDENCIES =  $(top_builddir)/src/muimaster/libmuimaster.la \
+$(top_builddir)/src/amilist/libamilist.la \
+$(top_builddir)/src/tagitem/libtagitem.la
+lay3_LDFLAGS = 
+slider_SOURCES = slider.c
+slider_OBJECTS =  slider.o
+slider_LDADD = $(LDADD)
+slider_DEPENDENCIES =  $(top_builddir)/src/muimaster/libmuimaster.la \
+$(top_builddir)/src/amilist/libamilist.la \
+$(top_builddir)/src/tagitem/libtagitem.la
+slider_LDFLAGS = 
+input1_SOURCES = input1.c
+input1_OBJECTS =  input1.o
+input1_LDADD = $(LDADD)
+input1_DEPENDENCIES =  $(top_builddir)/src/muimaster/libmuimaster.la \
+$(top_builddir)/src/amilist/libamilist.la \
+$(top_builddir)/src/tagitem/libtagitem.la
+input1_LDFLAGS = 
+COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
+DIST_COMMON =  Makefile.am Makefile.in
+
+
+DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
+
+TAR = gtar
+GZIP_ENV = --best
+SOURCES = $(libTicTacToe_mcc_la_SOURCES) ttt_demo.c lay2.c lay3.c slider.c input1.c
+OBJECTS = $(libTicTacToe_mcc_la_OBJECTS) ttt_demo.o lay2.o lay3.o slider.o input1.o
+
+all: all-redirect
+.SUFFIXES:
+.SUFFIXES: .S .c .lo .o .s
+$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+	cd $(top_srcdir) && $(AUTOMAKE) --gnu --include-deps examples/Makefile
+
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) \
+	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+
+
+mostlyclean-libLTLIBRARIES:
+
+clean-libLTLIBRARIES:
+	-test -z "$(lib_LTLIBRARIES)" || rm -f $(lib_LTLIBRARIES)
+
+distclean-libLTLIBRARIES:
+
+maintainer-clean-libLTLIBRARIES:
+
+install-libLTLIBRARIES: $(lib_LTLIBRARIES)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(libdir)
+	@list='$(lib_LTLIBRARIES)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    echo "$(LIBTOOL)  --mode=install $(INSTALL) $$p $(DESTDIR)$(libdir)/$$p"; \
+	    $(LIBTOOL)  --mode=install $(INSTALL) $$p $(DESTDIR)$(libdir)/$$p; \
+	  else :; fi; \
+	done
+
+uninstall-libLTLIBRARIES:
+	@$(NORMAL_UNINSTALL)
+	list='$(lib_LTLIBRARIES)'; for p in $$list; do \
+	  $(LIBTOOL)  --mode=uninstall rm -f $(DESTDIR)$(libdir)/$$p; \
+	done
+
+.c.o:
+	$(COMPILE) -c $<
+
+.s.o:
+	$(COMPILE) -c $<
+
+.S.o:
+	$(COMPILE) -c $<
+
+mostlyclean-compile:
+	-rm -f *.o core *.core
+
+clean-compile:
+
+distclean-compile:
+	-rm -f *.tab.c
+
+maintainer-clean-compile:
+
+.c.lo:
+	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+
+.s.lo:
+	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+
+.S.lo:
+	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+
+mostlyclean-libtool:
+	-rm -f *.lo
+
+clean-libtool:
+	-rm -rf .libs _libs
+
+distclean-libtool:
+
+maintainer-clean-libtool:
+
+libTicTacToe_mcc.la: $(libTicTacToe_mcc_la_OBJECTS) $(libTicTacToe_mcc_la_DEPENDENCIES)
+	$(LINK) -rpath $(libdir) $(libTicTacToe_mcc_la_LDFLAGS) $(libTicTacToe_mcc_la_OBJECTS) $(libTicTacToe_mcc_la_LIBADD) $(LIBS)
+
+mostlyclean-noinstPROGRAMS:
+
+clean-noinstPROGRAMS:
+	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
+
+distclean-noinstPROGRAMS:
+
+maintainer-clean-noinstPROGRAMS:
+
+ttt_demo: $(ttt_demo_OBJECTS) $(ttt_demo_DEPENDENCIES)
+	@rm -f ttt_demo
+	$(LINK) $(ttt_demo_LDFLAGS) $(ttt_demo_OBJECTS) $(ttt_demo_LDADD) $(LIBS)
+
+lay2: $(lay2_OBJECTS) $(lay2_DEPENDENCIES)
+	@rm -f lay2
+	$(LINK) $(lay2_LDFLAGS) $(lay2_OBJECTS) $(lay2_LDADD) $(LIBS)
+
+lay3: $(lay3_OBJECTS) $(lay3_DEPENDENCIES)
+	@rm -f lay3
+	$(LINK) $(lay3_LDFLAGS) $(lay3_OBJECTS) $(lay3_LDADD) $(LIBS)
+
+slider: $(slider_OBJECTS) $(slider_DEPENDENCIES)
+	@rm -f slider
+	$(LINK) $(slider_LDFLAGS) $(slider_OBJECTS) $(slider_LDADD) $(LIBS)
+
+input1: $(input1_OBJECTS) $(input1_DEPENDENCIES)
+	@rm -f input1
+	$(LINK) $(input1_LDFLAGS) $(input1_OBJECTS) $(input1_LDADD) $(LIBS)
+
+tags: TAGS
+
+ID: $(HEADERS) $(SOURCES) $(LISP)
+	list='$(SOURCES) $(HEADERS)'; \
+	unique=`for i in $$list; do echo $$i; done | \
+	  awk '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	here=`pwd` && cd $(srcdir) \
+	  && mkid -f$$here/ID $$unique $(LISP)
+
+TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) $(LISP)
+	tags=; \
+	here=`pwd`; \
+	list='$(SOURCES) $(HEADERS)'; \
+	unique=`for i in $$list; do echo $$i; done | \
+	  awk '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
+	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags  $$unique $(LISP) -o $$here/TAGS)
+
+mostlyclean-tags:
+
+clean-tags:
+
+distclean-tags:
+	-rm -f TAGS ID
+
+maintainer-clean-tags:
+
+distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
+
+subdir = examples
+
+distdir: $(DISTFILES)
+	@for file in $(DISTFILES); do \
+	  d=$(srcdir); \
+	  if test -d $$d/$$file; then \
+	    cp -pr $$d/$$file $(distdir)/$$file; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
+	    || cp -p $$d/$$file $(distdir)/$$file || :; \
+	  fi; \
+	done
+extclass.o: extclass.c ../include/zune/zune.h ../include/zune/boopsi.h \
+	../include/zune/classes.h ../include/zune/amitypes.h \
+	../include/zune/amilist.h ../include/zune/hooks.h \
+	../include/zune/rootclass.h ../include/zune/tagitem.h \
+	../include/zune/preprotos.h ../include/zune/library.h \
+	../include/zune/premui.h ../include/zune/zune_common.h \
+	tictactoe_mcc.h
+input1.o: input1.c ../include/zune/zune.h ../include/zune/boopsi.h \
+	../include/zune/classes.h ../include/zune/amitypes.h \
+	../include/zune/amilist.h ../include/zune/hooks.h \
+	../include/zune/rootclass.h ../include/zune/tagitem.h \
+	../include/zune/preprotos.h ../include/zune/library.h \
+	../include/zune/premui.h ../include/zune/zune_common.h
+lay2.o: lay2.c ../include/zune/zune.h ../include/zune/boopsi.h \
+	../include/zune/classes.h ../include/zune/amitypes.h \
+	../include/zune/amilist.h ../include/zune/hooks.h \
+	../include/zune/rootclass.h ../include/zune/tagitem.h \
+	../include/zune/preprotos.h ../include/zune/library.h \
+	../include/zune/premui.h ../include/zune/zune_common.h
+lay3.o: lay3.c ../include/zune/zune.h ../include/zune/boopsi.h \
+	../include/zune/classes.h ../include/zune/amitypes.h \
+	../include/zune/amilist.h ../include/zune/hooks.h \
+	../include/zune/rootclass.h ../include/zune/tagitem.h \
+	../include/zune/preprotos.h ../include/zune/library.h \
+	../include/zune/premui.h ../include/zune/zune_common.h
+slider.o: slider.c ../include/zune/zune.h ../include/zune/boopsi.h \
+	../include/zune/classes.h ../include/zune/amitypes.h \
+	../include/zune/amilist.h ../include/zune/hooks.h \
+	../include/zune/rootclass.h ../include/zune/tagitem.h \
+	../include/zune/preprotos.h ../include/zune/library.h \
+	../include/zune/premui.h ../include/zune/zune_common.h
+tictactoe.lo tictactoe.o : tictactoe.c tictactoe_mcc.h \
+	../include/zune/zune.h ../include/zune/boopsi.h \
+	../include/zune/classes.h ../include/zune/amitypes.h \
+	../include/zune/amilist.h ../include/zune/hooks.h \
+	../include/zune/rootclass.h ../include/zune/tagitem.h \
+	../include/zune/preprotos.h ../include/zune/library.h \
+	../include/zune/premui.h ../include/zune/zune_common.h \
+	../include/zune/mccheader.c
+ttt_demo.o: ttt_demo.c ../include/zune/zune.h ../include/zune/boopsi.h \
+	../include/zune/classes.h ../include/zune/amitypes.h \
+	../include/zune/amilist.h ../include/zune/hooks.h \
+	../include/zune/rootclass.h ../include/zune/tagitem.h \
+	../include/zune/preprotos.h ../include/zune/library.h \
+	../include/zune/premui.h ../include/zune/zune_common.h \
+	tictactoe_mcc.h
+
+info-am:
+info: info-am
+dvi-am:
+dvi: dvi-am
+check-am: all-am
+check: check-am
+installcheck-am:
+installcheck: installcheck-am
+install-exec-am: install-libLTLIBRARIES
+install-exec: install-exec-am
+
+install-data-am:
+install-data: install-data-am
+
+install-am: all-am
+	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
+install: install-am
+uninstall-am: uninstall-libLTLIBRARIES
+uninstall: uninstall-am
+all-am: Makefile $(LTLIBRARIES) $(PROGRAMS)
+all-redirect: all-am
+install-strip:
+	$(MAKE) $(AM_MAKEFLAGS) INSTALL_STRIP_FLAG=-s install
+installdirs:
+	$(mkinstalldirs)  $(DESTDIR)$(libdir)
+
+
+mostlyclean-generic:
+
+clean-generic:
+
+distclean-generic:
+	-rm -f Makefile $(CONFIG_CLEAN_FILES)
+	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
+
+maintainer-clean-generic:
+mostlyclean-am:  mostlyclean-libLTLIBRARIES mostlyclean-compile \
+		mostlyclean-libtool mostlyclean-noinstPROGRAMS \
+		mostlyclean-tags mostlyclean-generic
+
+mostlyclean: mostlyclean-am
+
+clean-am:  clean-libLTLIBRARIES clean-compile clean-libtool \
+		clean-noinstPROGRAMS clean-tags clean-generic \
+		mostlyclean-am
+
+clean: clean-am
+
+distclean-am:  distclean-libLTLIBRARIES distclean-compile \
+		distclean-libtool distclean-noinstPROGRAMS \
+		distclean-tags distclean-generic clean-am
+	-rm -f libtool
+
+distclean: distclean-am
+
+maintainer-clean-am:  maintainer-clean-libLTLIBRARIES \
+		maintainer-clean-compile maintainer-clean-libtool \
+		maintainer-clean-noinstPROGRAMS maintainer-clean-tags \
+		maintainer-clean-generic distclean-am
+	@echo "This command is intended for maintainers to use;"
+	@echo "it deletes files that may require special tools to rebuild."
+
+maintainer-clean: maintainer-clean-am
+
+.PHONY: mostlyclean-libLTLIBRARIES distclean-libLTLIBRARIES \
+clean-libLTLIBRARIES maintainer-clean-libLTLIBRARIES \
+uninstall-libLTLIBRARIES install-libLTLIBRARIES mostlyclean-compile \
+distclean-compile clean-compile maintainer-clean-compile \
+mostlyclean-libtool distclean-libtool clean-libtool \
+maintainer-clean-libtool mostlyclean-noinstPROGRAMS \
+distclean-noinstPROGRAMS clean-noinstPROGRAMS \
+maintainer-clean-noinstPROGRAMS tags mostlyclean-tags distclean-tags \
+clean-tags maintainer-clean-tags distdir info-am info dvi-am dvi check \
+check-am installcheck-am installcheck install-exec-am install-exec \
+install-data-am install-data install-am install uninstall-am uninstall \
+all-redirect all-am all installdirs mostlyclean-generic \
+distclean-generic clean-generic maintainer-clean-generic clean \
+mostlyclean distclean maintainer-clean
+
+
+# Tell versions [3.59,3.63) of GNU make to not export all variables.
+# Otherwise a system limit (for SysV at least) may be exceeded.
+.NOEXPORT:

@@ -1,0 +1,67 @@
+ BOOPSI vs. world, by David Le Corfec.
+
+
+BOOPSI stands for Basic Object Oriented System for Intuition.
+It was developped by Commodore to enhance the AmigaOS programming,
+mainly in the GUI field.
+Zune uses it as a foundation for OOP with C programming.
+
+Here are some of my thoughts about BOOPSI ...
+
+BOOPSI may seem deprecated, compared to "real" object oriented langages
+like <insert your favorite OO langage here>.
+BOOPSI was first introduced in AmigaOS 2.0, at the beginning
+of the 90's. GTK+ shows that it's not such a braindead idea
+to use C and a soft OO system as a base for a GUI toolkit.
+
+BOOPSI seems rather oriented toward flexibility than speed.
+
+BOOPSI is slow, at least compared to C++ method invocation.
+You don't have a virtual table, with the correct methods
+for each class. Instead BOOSI calls a chain of switch/case
+method dispatchers, going up to the root class until someone
+implements the request method.
+
+However, for GUI stuff its sufficient, at least on today computers,
+compared to any Amiga with a cpu below the 68060.
+
+No, it's main drawback is for me the need to supply unique
+ids (currently 32 bits tags) to identify every method and every attribute.
+(Perhaps using strings, like GTK+, could be better, if possible at all)
+
+Even if a method and an attribute tag can't conflict, it's
+still a pain to assign tags. I'm to the point of using
+a grep on all my ids header files to check if an id is already used.
+Not very practical, and it may be worse with developers worlwide.
+A central authority assigning id ranges for public classes
+is needed. What an organization nightmare !
+Without care, several public classes may end up using the
+same ids for their interfaces. Though I doubt it could really
+be a huge problem, it could be annoying, sometimes.
+Zune ids are under the hexa form 0x8042XXXX. Stay away from
+them and you have some chance to be safe. Always keep TAG_USER
+(setting the 31st bit, 1<<31) or you'll have some problems ...
+
+However, working with ids ensure a compatibility
+with separate loadable modules, and possibly with distributed object (?)
+the interface being hidden behind well-defined, unique ids,
+you don' have to know the exact implementation of
+other classes. You just need access to a proper class dispatcher.
+No more incompatibilites between new libraries and old programs,
+the C interface stay the same (BOOPSI), and the ids are unlikely
+to change between releases.
+
+Using dynamically allocated ids, instead of statically/universally
+known ids, and/or having virtual tables, could (if possible at all)
+ameliorate both ease of class creation an speed, at the expense
+of the flexibility and guaranteed ascendant compatibility.
+
+Perhaps a newer system like GTK+ can bring new ideas for BOOPSI
+(the per-class allocator is the first one adopted).
+
+Wait and see ...
+
+Thanks to Maik Screiber for its OOPExample demo program,
+which was the first program using BOOPI + MUI
+that I understood :)
+

@@ -1,0 +1,43 @@
+Here are some suggestions:
+* The most important :) My indentation ? M-x c-set-style bsd
+  Found that in "ESR's" fetchmail. And 4 is between the braindead
+  2 (RMS) and 8 (Linus).
+
+* "You can never have enough sub classes in an application" (S. Stuntz)
+
+* Try to put only one class per file.
+
+* defining attributes/methods tag values is a burden.
+  - Always use TAG_USER
+  - Combine with "your personal unique id worldwide"
+    (here is a problem of this OO system)
+  - Good thing, an attribute and a method can have the same tag value,
+    it won't clash.
+
+* naming object data structure : attributes of your class
+  will be in a struct named [ClassName]Data, like NotifyData
+
+* attributes:
+  named MUIA_[ClassName]_[AttributeName]
+  eg. MUIA_Window_Open
+  a comment must follow, to document the possibility to give
+  this attribute at initialisation (i), to set it (s), or to get it (g).
+  Either specify the letter or a dot (.) like this: /* i.g */
+  Document public attributes somewhere.
+
+* methods:
+  named MUIM_[ClassName]_[MethodName], eg. MUIM_Family_AddTail
+  Document public methods somewhere.
+
+* implemented methods are static, because only the class dispatcher
+  (static too) must know them. Only the Create[ClassName]Class
+  must be public. These functions are a convenience for your
+  private classes, and will call MUI_CreateCustomClass.
+
+* naming implemented methods :
+  dispatcher : [ClassName]_Dispatcher()
+  OM_NEW -> [ClassName]_New()
+  OM_DISPOSE -> [ClassName]_Dispose()
+  OM_... -> guess what
+  MUIM_[ClassName]_MethodName -> [ClassName]_MethodName()
+

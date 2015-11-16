@@ -1,0 +1,64 @@
+Here are some of the differences between MUI and Zune.
+This list is not exhaustive ...
+
+For users:
+
+- User Prefs for keyboard control:
+ If all goes well, it uses Standard KeySym names. Remove the "XK_" prefix
+ from entries in <X11/keysymdef.h>
+ This gives capitalized names for "special" keys, like Return, Tab, Left,
+ Shift, Shift_L,  ...
+ Of course, you gain some special keys (Begin, End ...) but you surely miss
+ others (Help ...)
+ Normal keys aren't capitalized : space, a, b ...
+ Beware of the case !
+
+- No more ENV: and ENVARC: as you guessed.
+  User prefs are located in $(HOME)/.zune/
+  System prefs are located in $(datadir)/zune/
+  ($(datadir) being often /usr/local/share/)
+
+- Scaled pictures are supported for backgrounds (thanks to gdk_imlib). 
+  Useful for nice gradient pixmapped buttons. Imlib borders are handled, too.
+  So bevel borders are not uglily scaled.
+  Don't forget to enable "Pixmap cache" in imlib_config !!! (unlike me :)
+
+- The colormap penspec is not very supported yet. MUI Pens and RGB
+  seem enough (?).
+
+For programmers:
+
+- Dataspace is totally changed. No more IFF files, and
+ direct Add/Find of memory structures. Instead you have ASCII
+ files, and thus have some more methods to Add/Find elementary variables.
+ You have to write your string parser/writer to Add/Find
+ complex structures. Longer, but more readable, portable, and Unix-like :)
+
+ The API is not that good, IMHO. Suggestions welcome !
+
+- MUIA_ObjectID is now a STRPTR instead of an ULONG, to be
+  used as a key in Dataspaces. MAKE_ID should be of less use ...
+
+- Utility Hooks have lost their 4th field, h_SubEntry, because
+ I found it useless without ASM funcs :)
+ And it makes your definitions shorter:
+  static struct Hook PressHook  = { {0,0}, PressCB, NULL};
+ instead of
+  static struct Hook PressHook  = { {0,0}, PressCB, NULL, NULL};
+
+ (a kind of gratuitous incompatibility, but there aren't that many hooks
+  in real apps, because you use methods and subclasses, no ?)
+
+- MUII_SelectedBack is forced to MUII_FILL when MUIA_InputMode is set
+  to MUIV_Input_None, for speed purposes. Tell me if you need to set
+  MUIA_Selected without user input capabilities. But I doubt.
+
+- Functions dealing with pens have been more or less silently perverted,
+  while retaining their original names.
+  Replace "Pen" with "Pixel" to get the idea.
+
+- Some Graphics functions (SetAPen ...) have been added. Take GCs instead
+  of RastPorts. Fortunately, the GC field of the RenderInfo is called
+  mri_RastPort, and _rp(obj) still work, so it should give more
+  or less the same code. Perhaps Move and Draw should be added too ...
+

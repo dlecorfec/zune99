@@ -1,0 +1,222 @@
+***
+ before attempting to compile, read the paragraph
+ "Files needed from the original MUI distribution"
+***
+
+
+   Zune 0.1
+
+
+Disclaimer (ripped from Mesa 3.1)
+==========
+
+Zune is a GUI library with an API and look&feel which are very similar
+to those of MUI*.  However, the author makes no claim that Zune is in
+any way a compatible replacement for MUI or associated with Stefan Stuntz.
+This software is distributed under the terms of the GNU Library General
+Public License, see the COPYING file for details.
+
+While Zune is an unofficial MUI implementation, it is currently
+aimed as being as close as possible, but no closer :)
+For gratuitous incompatibilities and other things,
+see the doc/incompatibilities.txt file included in this distribution.
+
+* MUI is Copyright (C) 1993-1997 Stefan Stuntz.
+
+--
+
+See COPYING for the license terms.
+See INSTALL for basic installation help.
+See NEWS for the current state of Zune.
+
+--
+
+Description:
+
+MUI (Magic User Interface) originated from the Amiga,
+where it was considered as one of the best shareware ever. 
+It provides benefits for the user, by allowing him
+to customize his applications look, and for the developer,
+who can write easily a resizeable, font-sensitive GUI.
+
+What is the goal of Zune ? I don't know :)
+
+Perhaps it's to gain some fame/celebrity/money/women.
+(this is currently a one man work, with much code reused
+from other projects, though. I hope it will change, else
+Zune will die, whatever I do. One-man projects always die.
+Bazaar rules :)
+
+Perhaps it's to make a MUI demo to those who haven't seen
+it on Amiga, or cannot run UAE. That's way nicer than Athena
+widgets, no ? :)
+
+Perhaps it's to show yet other GUI programming idioms.
+You knew Lesstif, Qt, and GTK+. Now you HAVE to learn MUI :)
+
+As an implementation curiosity, there's only one toplevel
+window per MUI_Window. All widgets are gadgets : they do not
+have associated X windows. I thought it was equivalent to the
+Amiga, but on a second thought, X windows may be equivalent
+to Layers. Anyway, I never needed Layers on Amiga (but I didn't
+code many things on Amiga either :)
+(to be honest, the gadget focus is drawn with 4 other X windows).
+
+--
+
+Implementation credits:
+
+For portability and ease of writing issues, Zune uses
+the GLib and GDK libs. Some parts are reusing GTK+ code
+(mainly window-level event dispatch and main loop - though
+Zune main loop looks quite different in an API user point of view).
+
+Pictures handling is done by gdk_imlib. It's a well spread library,
+supporting many render formats, and, the definite plus,
+linking against it doesn't require you to link against all
+the format libraries (jpeg, png ...). Nice plugin system !
+If you don't like it, implement the code between the WITH_IMLIB
+defines with your own equivalent.
+
+AmigaOS functions were mainly took from AROS, by Matthias
+Fleisher and others. See www.aros.org.
+I wrote an usable TagItem library from scratch
+years ago, but I think the current one comes from AROS
+(I trust them better than me). Sorry if I reformated and
+eventually modified the code to fit in Zune (like removing
+german comments, or replacing assert with g_assert).
+
+Zune implementation is based on MUI autodocs, MUIdev.guide,
+MUI examples, MUIUndoc, OOPExample, and examining MUI screenshots.
+A special regard for Alessandro Zummo, author of MUIUndoc,
+and Maik Schreiber, author of OOPExample. And greetings to
+the other MUI activists around the world, especially custom
+classes writers (hint: porting mcc's to Zune is easy, consider
+contributing free mcc's :)
+
+I could forget anybody but Stefan "Stuntzi" Stuntz, the author of MUI.
+What a great work ! I hope Zune that Zune 1.0.0 (soon :) won't give
+a wrong picture of the original MUI.
+
+Contributions are welcome.
+
+For docs, see in the mui38dev.lha archive (download info in
+the following section). Especially Docs/MUIdev.guide and
+the C/Examples/psi.c are helpful, as well as all the Class*
+examples. This includes per-class autodocs in ASCII format,
+HTML is available at the SASG site, both online and archived
+(you may need an lzx desarchiver, is there one freely available ?).
+
+--
+
+Files needed from the original MUI distribution:
+
+ Zune needs mui.h (constants, macros, tags ...) and
+ muimaster_protos.h (functions declarations from muimaster.library)
+
+ They have to be copied in "$(srcdir)/include/zune/" and will
+ be installed in "$(includedir)/zune/" along with other public Zune includes
+ during a normal installation (but not if installing with a DESTDIR
+ to avoid redistribution).
+ You can also copy them directly in "$(includedir)/zune/".
+
+ You can find them in mui38dev.lha (as long as other goodies).
+ This archive is freely available in all Aminet mirrors
+ (try <yourCountryCode>.aminet.net) under util/libs/,
+ or directly at the MUI site, http://www.sasg.com/mui/download.html
+ (but using your nearest Aminet mirror is always better) 
+
+ MUI/C/Include/libraries/mui.h (126905)
+ MUI/C/Include/clib/muimaster_protos.h (3177)
+
+ The latest public class tree is drawn at the beginning of mui.h.
+
+--
+
+Notes on TagItem usage :
+
+ a TagItem is key/value pair:
+
+	struct TagItem {
+	   ULONG ti_Tag;
+	   ULONG ti_Data;
+        };
+
+ Many functions in Zune, as their Amiga counterparts, accept
+ a TagItem array as argument.
+
+ Often there is a varargs stub, called like this:
+  Foo(fixed_arg, TAG1, (ULONG)data1,
+    	         TAG2, (ULONG)data2,
+                 TAG3, (ULONG)data3,
+	         TAG_DONE);
+
+ * Only pointers and ULONG integers are permitted as data.
+   Pass other types (float and double) as pointers to these other types.
+
+ * Always cast datas to ULONG, especially numeric constants
+   (using (ULONG)42 seems more portable than 42L)
+
+ * Always construct your own tags with TAG_USER:
+    #define MY_TAG (TAG_USER | 0x1234)
+
+ * Always (*always*) end a TagItem vector with {TAG_DONE, (ULONG)O} or
+   end a variable parameter list with TAG_DONE.
+
+--
+
+Notes on Zune (un)portability : (don't run away screaming :)
+
+* Zune is not very consistent in its choice argument types, between
+glib and amiga types or between int/long.
+
+Current types work with gcc on ix86-linux, and probably on m68k too,
+(ie. sizeof(int) = sizeof(long) = sizeof(char *) = 4)
+ULONG must be large enough to hold either a value or a pointer.
+
+It may be a problem on more exotic hardware I don't have
+under the hands. I doubt I'm gonna support any 16 bits system,
+but we WILL step on 64 bits systems one day or another !
+
+* Zune relies heavily on variable argument lists, though it does not
+use va_arg(), and sometimes not even va_start()/va_end().
+
+ 1. It assumes variable arguments are ordered in the order they are
+ given: first vararg being vector[0], second vector[1] ...
+
+ int fooA (int *vect);
+
+ int foo (int tag1, ...)
+ {
+     return fooA (&tag1);
+ }
+
+ 2. It assumes that after the call to va_start(), the va_list
+ is just a pointer to the first variable argument.
+
+ int barA (char *foofoo, int *vect);
+
+ int bar (char *foofoo, ...)
+ {
+     va_list args;
+   
+     va_start(args, foofoo);
+     return barA (foofoo, (int *)args);
+     va_end(args);
+ }
+
+ (and it seems better than "barA (foofoo, (int *)(foofoo+1));" :)
+
+Most of the faulty functions are in src/muimaster/[am]*.c
+Grep for "\.\.\." there :)
+
+It works on m68k-amigaos and ix86-linux. Other architectures
+may encounter problems.
+
+If the tests fail at initialization time, this means that
+slower code involving varargs copy in an array should be
+conditionnaly compiled instead of the current code. 
+Unfortunately, such code is not yet designed/developed.
+Feel free if you need it ...
+
+

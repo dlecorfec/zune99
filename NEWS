@@ -1,0 +1,409 @@
+=== 0.1.18 (11-Sep-1999)
+
+Most varargs stubs have been replaced with macros like
+#define DoMethod(obj, tags...) \
+({arg_type _args[] = { tags }; DoMethodA(obj, (Msg)_args); })
+
+This stuff works only with gcc.
+
+MUI_NewObject and MUI_Request are still varargs stubs, but
+they handle varargs nicely on all architectures - I guess.
+However MUI_NewObject should have a problem on 64 bits machines.
+
+The problem with manual args extraction, is that it assumes that
+all args are ULONGs (contains int or ptr, an 8 bytes 'long' on Alpha).
+However, K&R says integer args are implicitely promoted to 'int' (4 bytes on Alpha)
+unless explicitely casted to ULONG. Thus alignment problems in the stack,
+unless all this code in Zune is corrected. Not to speak about 3rd party apps.
+
+But turning MUI_NewObject into a macro is impossible :
+because MUI has many useful object creation macros in mui.h using MUI_NewObject 
+in a strange way, and because of the behaviour of the C preprocessor, 
+there are "unterminated macro call" in mobject.c at least. 
+
+Other "incompatibility" with MUI :
+to avoid conversion warnings in the macros, the pointers
+have to be casted to integers. The macro _U(ptr) does this.
+In fact this is GPOINTER_TO_UINT() from glib.
+
+Macros using MUI_MakeObject have to use _U() to compile correctly
+(in include/zune/premui.h and include/priv/macros.h).
+Only SimpleButton and CLabel have been adapted so far,
+others may need work - but no code is using them yet.
+
+Remember, "libtool gdb examples/foo" then "r" and "bt" to get
+a stack trace.
+
+=== 0.1.17 (06-Sep-1999)
+
+ Announce on MUI mailing lists. Positive feedback. Feels good.
+
+ Fixed bug caused by NULL or unset MUIA_Text_Content. Thanks to
+ Bohdan Rau for reporting this.
+
+ First major varargs fix required for PPC. Thanks to Peter Kaltstein.
+
+=== 0.1.16 (26-Aug-1999) (303146)
+
+ Real Break at last. Back home, productivity drops.
+
+ Fixed the destruction of objects with NULL childs.
+ Fixed font init with no prefs files.
+ Added a default global.prefs file.
+ Slider is still not working - not enough motivation ...
+
+=== 0.1.15 (11-Aug-1999) (301136)
+
+ Eclipse Day in Europe ...
+
+ mdynamic.c: 
+ Added dynamic loading of custom classes, now Zune is infinitely
+ extensible :) (it was even before, because it's free software :).
+ Thanks to GModule. Removed the -rdynamic (ie. -export-dynamic)
+ from Zune link flags, because it's not needed.
+ Both original MUI Custom Class code and GTK code are easy to port,
+ I did port the TicTacToe class from the GTK Tutorial as the
+ 1st Zune MCC, with the guidelines from mccheader.c and tron.c from
+ the MCCTron by Klaus 'kmel' Melchior.
+ I like this feature ! It smells even more the good ol' miga time !
+ Though MCPs are still to do, perhaps when ZunePrefs will be done ...
+ Currently MCCs are named like "TicTacToe_mcc" (no dot) and
+ saved in a platform-dependant manner (eg. libTicTacToe_mcc.so on Linux)
+ Classes are searched in $HOME/.zune/libs/ and $(libdir)/zune/
+
+ mbuiltin.c:
+ As a side effect, big cleanup in Zune builtin classes creation.
+ Now it's nearly beautiful. Coding is an art, no ? :)
+ Don't use static storage in functions that may be called recursively
+ (I'm stupid - part time only).
+ 
+ TODO : buy a backed-up power supply, e2fsck takes too long :)
+
+ Added MUIV_Window_(Height|Width)_(Visible|Screen), to enjoy
+ the TicTacToe board at its best.
+
+ TODO : really fix the destruction of objects with NULL childs.
+
+ Because I know ZunePrefs won't be ready before Zune has the needed
+ classes, I added some sugar to the prefs handling : comments
+ beginning with '!' are kept in memory, and dumped when Zune
+ saves prefs (examples/image has a button that saves prefs).
+ Currently saving is needed to get a fresh config file after
+ adding some features to zconfigdata.c.
+
+ Added MUI_Numeric (untested).
+ Added MUI_Slider (unfinished - not even slightly working).
+
+ Wrote postcards :)
+ Next week, trip to the South of France for my cousin's wedding.
+ No progress for Zune expected ! Hopefully nobody can notice.
+
+=== 0.1.14 (06-Aug-1999) (285280)
+
+ New Features:
+ Rectangle's BarTitle
+ Area's FrameTitle
+
+ Painful to get them right (need to encapsulate relief style drawing),
+ corrected thousands of minor glitches in the text engine. xmag rules.
+ Debugging off-by-one pixel offsets takes your time, and ruins your day.
+ I really want to make a perfect engine before the public release ...
+
+ The thing I'm proud of : italic (and in the future, antialiasing :)
+ is now displayed at light speed, due to a minor change, and imlib cache.
+ An italic text chunk is now rendered only once. Was too unusable before.
+
+ Hacked some dri_Pens equivalent, for the font colors.
+ Cleaned up a bit the color allocations. Each window should have its
+ independant gfx datas, but in practice, with the use of gdk, all
+ windows of an application are on the same screen/display, so
+ no need of more complexity. Only muipens are currently allocated
+ for each window, and most of the gfx stuff from prefs (images
+ and fonts) are allocated application-wide. Else it would have
+ been needed to create gfx resources on a window/screen basis.
+ Of course, changing screen/display at runtime is possible,
+ but only for the application (all windows). Anyway, I don't
+ think it's possible or needed on X.
+
+ There is the first Zune app : welcome to zune_hello 0.1 ! :)
+ It compiles and runs fine, thank you :)
+
+ Time to try to cleanup the Area and textengine mess, and
+ add the images to the text ...
+
+=== 0.1.12 (02-Aug-1999) (277174)
+
+ Text engine mostly works, but inline images are not yet handled.
+ Bold and underline seem ok, but italic is ugly and slow. At least
+ it's there :) It gave me some ideas about transformations and antialiasing,
+ but it would be even slower than GTK Pixmap engine ! :)
+
+ Text color is not implemented yet (I miss some Amiga headers to
+ better understand the pen values. But I will guess for the next release :).
+ MUI_Text is done.
+
+ Added some MUIO objects : Label, Button, Checkmark.
+ In <zune/zune_common.h> are also some useful functions for object creation,
+ based on the macros and MUIO stuff.
+
+ Implemented MUIA_ControlChar for those lovely text buttons :)
+ 
+ Focus drawing is much better, with 4 little windows around the focused
+ gadget.
+
+ Did some improvements in configuration (ripping from gtk+) and
+ Makefiles (to not install non-free headers in DESTDIR, avoiding
+ polluting rpms for example).
+ Created zune.spec.in, zune-config.in, zune.m4 from GTK+ 1.2.3 and
+ imlib 1.8.1 (yep old version).
+
+ And the usual bunch of internal changes/bugfixes, you'll never heard of ...
+
+ Do not forget to add attributes you got called with, when doing
+ a DoSuperNew to add your own attributes in your OM_NEW :)
+ Especially when doing a subclass of MUI_Area :) (see zrectangle.c)
+
+ TODO:
+  finish Rectangle BarTitle
+  implement MUIA_FrameTitle
+  add text color
+  add text inline images
+  test the new scripts in a separate Zune application (ZZilla ? :)
+
+=== 0.1.11 (29-Jul-1999) (264642)
+
+ Those who say it's always cold and rainy in Britain are wrong.
+
+ Feeling strange today. Needing to write. Looks like a diary.
+ Muikeys are basically working, as is gadget cycling.
+ Now you can cycle through gadgets (eg. with Tab), and press them
+ (eg. with Return). Some gadgets may offer additional keyboard control.
+ Focus (active gadget) drawing is not yet optimized. The problem is
+ that MUI focus is drawn around the gadget, in the parent container.
+ Thus to erase it, it currently redraws parent and child. Without
+ a pixmap buffer, it causes flicker.
+
+ Spent some time debugging the hairy image spec stuff, while
+ it was because my test program saved image prefs just after freeing
+ the prefs structure :)
+
+ Debugged a more serious problem with a scalable image ("brush" type)
+ in MUII_SelectedBack.
+ Each gadget got its image copy from the bad image (the image copy
+ replacing the original "link" image at setup). Very very hard to trace
+ the image stuff, I wish I could rewrite it in a simpler way.
+ Resolved by suppressing setup/cleanup on the MUII images.
+ Magically all worked again :)
+ The main problem with images being that preset images could change
+ at runtime, and that the GUI should be correctly redrawn. Many
+ way to implement these indirect references of objects on images,
+ I choosed about the trickiest one.
+
+ Changed the MUIA_Parent and _parent behaviour to be the same as
+ discovered in MUIUndoc : null parent for app, win, and root obj.
+
+ Clipping usage should be generalized, now that drawing is done
+ with a single GC. Some MUI functions allow stacking clip rects/regions.
+ From the biggest clip, to the smallest clip.
+
+ Thought a bit about the type-checking : due to TagItem usage,
+ Zune has no type-checking, and is restricted to ULONG for arguments,
+ but as a side effect writing code for both implementors and users
+ is less painful to write than GtkArg'ized one.
+ Of course, big type mistakes are always possible for users,
+ however that shouldn't be such a problem with some practice.
+ That shouldn't be a worst problem than it was on Amiga :)
+ And the varargs have portability problems. Written about that
+ in the README.
+
+ As a workaround, a buch of (inlined ?) setter/getter functions
+ could be developed to provide type checking, like most of GTK+ API,
+ and of course are welcome in a C++ wrapper :)
+
+ Adding reflection (info about methods and attributs supported)
+ to a class, like Java or GTK+ do, could add (perhaps) that bit of safety,
+ and a better support for GUI builders (no need to know what classes
+ are available, and useful for 3rd party classes), at the expense
+ of more work for classes writers and perhaps on API users.
+ Better think about this "later" :)
+
+ Should optimize layout recalculation when dynamically adding/removing
+ childs in a group, instead of asking the window a full recalc.
+
+ Would it be possible to transparently (except for Window class)
+ use a pixmap buffer to achieve smoother redraws ? And it would be
+ user configurable, like Simple/Smart refresh on Amiga. 
+ Some would call that double buffering, but it's not, really.
+
+ Hoping to use more enums for attributes and methods,
+ because I like enums. Not really, but I've read I should, so ... :)
+
+ I'm gonna begin the text engine. I know I didn't finished the Area yet,
+ but I'm getting bored. Disable, ControlChar, not to speak of DND ...
+ "Rome wasn't build in one day" :)
+ Lk's Theme rules ...
+
+=== 0.1.10 (25-Jul-1999) (255177)
+
+ Hey, someone gonna code a TFMX player ? I miss that ...
+ [update 990827 : got my hands on jhp's tfmx code ! expect plugin soon :)]
+ Gonna be 3 sea bathes in 3 days, good for the health :)
+ Managed to do the boring tasks: cleaned up includes
+ (now requires 2 original files from mui38dev.lha to compile apps, so I
+ don't have to distribute them with Zune :)
+ and finished the Zune prefs loading/saving.
+ I'll probably work on muikeys ...
+
+ TODO:
+  IFF loader for Imlib (not before I come back home to read
+  the Amiga Bible that Stephane Mbaye kindly gave to me :)
+
+=== 0.1.9 (22-Jul-1999) (264020)
+
+ Time for a new internal release :)
+ Huge work on the image engine, to ensure you can always
+ change images at runtime, and to have shared (reference counted)
+ images when possible, else individual image instances (for
+ pixmaps scaled to each gadget)
+ Eek, the prefs system is working !
+ Two of the hardest part of Zune seem done.
+
+ TODO:
+  Clean up includes (boring)
+  Finish prefs I/O (boring)
+  Prepare image sets :)
+  Text engine
+  muikey translation
+  Add new frames, possibly configuration of frame pens
+  And too much MUI classes left :) (some may be easy to write - not List)
+
+=== 0.1.8 (19-Jul-1999) (249483)
+
+ MUI_Image is usable.
+ Add support for Imlib borders, to reuse GTK themes pixmaps
+ -> new Image_Spec formats : "a:" is similar to "4:" (scalable gfx
+ with border 0), "b:" has border 1, "c:" 2, "d:" 3 (0xd is 10 + 3 :)
+ Yet another ASCII API change for Dataspace.
+ 
+ TODO:
+  write the Configdata class derived from Dataspace !
+  and at last load/save MUI prefs in a simple way ...
+
+=== 0.1.7 (18-Jul-1999) (never packaged)
+
+ Now coding in 800x600 (thanks to X -gamma 1.6 :)
+ Image engine works ! based on gdk_imlib.
+ Huge work on the ImageSpec stuff.
+ Added ASCII API to Dataspace, implemented via UProperties
+
+ TODO:
+  write MUI_Image
+  use new Dataspace API to load/save Zune config.
+  still muikey translation ...
+  still text engine ...
+
+=== 0.1.6 (16-Jul-1999) (237691)
+
+ Now coding "on the beach" with a 14'' Targa
+ (gamma: 0.01, pitch: 0.5 cm), in 640x480 :(
+ (I really miss my 19'' from home :)
+ Hopefully the sunny Britain weather is better for coding than
+ the overheated, overpolluted one from Paris.
+ Added page mode to groups. See examples/pages.c
+ Corrected minor layout bugs (handling last childs with max sizes),
+ and subdivised huge functions.
+ Added a dynamic add/remove (with creation/destruction) demo : dynamic.c
+
+=== 0.1.5 (10-Jul-1999) (228424)
+
+ Input support !
+ Corrected minor layout bugs.
+ Plus the usual minor features implemented ...
+
+ TODO:
+  handle images
+  draw text
+  muikey translation
+
+=== 0.1.4 (7-Jul-1999) (223646)
+
+ Added some new frames.
+ Implemented UProperties, to load/save from ASCII files
+ (IFF and Dataspaces are easy to use, but they are less portable)
+ First release to use prefs files.
+ Windows are automatically refreshed whenever config files change !
+
+ TODO:
+   Complete prefs I/O
+   still Input ...
+   still Text ...
+
+=== 0.1.3 (3-Jul-1999) (214373)
+
+ Took a break and did an effect plugin for xmms :)
+ Finished layout (for 2D groups).
+ Frames begin to be drawn.
+
+ next TODO:
+   Finish frames drawing (easy)
+   Add input handling
+   MUI_Text engine
+
+=== 0.1.2 (17-Jun-1999) (208662)
+
+ Layout is 90% working (horiz and vert groups).
+ Window geometry hints and resize are handled.
+ Global prefs structure added.
+ Begin to play with gdk.
+ Copied more gdk code from gtk (gc caching)
+ Help welcome on effective gc use.
+
+ TODO: finish layout, add input/event handling,
+ use prefs files, draw frames, draw text ...
+
+=== 0.1.1 (12-Jun-1999) (199084)
+
+ Early messy release for some friends
+
+=== 0.1.0 (9-Jun-1999) (187263) "internal release"
+
+Soon an early public release ?
+
+AmigaOS stuff seems OK. Added per-class object allocator
+in BOOPSI. Also added allocators (in fact, GMemChunk)
+here and there.
+Notify.mui is nearly 100%, as is Family.mui.
+
+Builtin class creation has been cleanup up, now
+only 2 lines need to be added to mbuiltins.c to
+add a new class (plus the Makefile.am and the class itself :)
+
+Application, Window, Area, and others are just no-op now.
+Next work will focus on the event loop/dispatch in Application.
+Then event handling in Window, to arrive to Area/Group.
+Group layout will be a very funny part to do, I can't wait for it.
+
+===
+
+ June 1999:
+
+ Crazy idea : restarting Zune !
+ (I was a bit disturbed by failing at fixing a simple resize bug
+  in a gimp dialog with a preview. GTK+ layout is so strange :))
+ With the advent of glib and gdk, a great deal of complexity
+ and portabilty difficulties go away (I thought)
+ But there's not much room for another toolkit :
+ everyone's busy coding on GTK or Qt :)
+ And I don't want to distract them. Well, there should be
+ idle people, too. The world is big enough.
+
+===
+
+ Zune slowly began on AmigaOS, in 1997-1998., after falling in love
+ with MUI while coding a GUI for Alexis Nasr's XpkCybPrefs.
+ Coded up to the MUI_Notify class.
+ Then stopped (no more time, wondering about which graphic platform
+ to support, and perhaps demotivated by the Nirvana vapor clone - what
+ happened to it ?).
+ And it had hand-made Makefiles, and did not link on my m68k-linux,
+ which wasn't very helpful for motivation.

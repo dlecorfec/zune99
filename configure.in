@@ -1,0 +1,226 @@
+dnl Process this file with autoconf to produce a configure script.
+
+AC_INIT(src/muimaster/aboopsi.c)
+
+dnl we to AC_DIVERT_PUSH/AC_DIVERT_POP these variable definitions so they
+dnl are available for $ac_help expansion (don't we all *love* autoconf?)
+AC_DIVERT_PUSH(AC_DIVERSION_NOTICE)dnl
+#
+# Making releases:
+#   ZUNE_MICRO_VERSION += 1;
+#   ZUNE_INTERFACE_AGE += 1;
+#   ZUNE_BINARY_AGE += 1;
+# if any functions have been added, set ZUNE_INTERFACE_AGE to 0.
+# if backwards compatibility has been broken,
+# set ZUNE_BINARY_AGE and ZUNE_INTERFACE_AGE to 0.
+#
+ZUNE_MAJOR_VERSION=0
+ZUNE_MINOR_VERSION=1
+ZUNE_MICRO_VERSION=18
+ZUNE_INTERFACE_AGE=0
+ZUNE_BINARY_AGE=0
+ZUNE_VERSION=$ZUNE_MAJOR_VERSION.$ZUNE_MINOR_VERSION.$ZUNE_MICRO_VERSION
+dnl
+AC_DIVERT_POP()dnl
+
+AC_SUBST(ZUNE_MAJOR_VERSION)
+AC_SUBST(ZUNE_MINOR_VERSION)
+AC_SUBST(ZUNE_MICRO_VERSION)
+AC_SUBST(ZUNE_INTERFACE_AGE)
+AC_SUBST(ZUNE_BINARY_AGE)
+AC_SUBST(ZUNE_VERSION)
+
+# libtool versioning
+LT_RELEASE=$ZUNE_MAJOR_VERSION.$ZUNE_MINOR_VERSION
+LT_CURRENT=`expr $ZUNE_MICRO_VERSION - $ZUNE_INTERFACE_AGE`
+LT_REVISION=$ZUNE_INTERFACE_AGE
+LT_AGE=`expr $ZUNE_BINARY_AGE - $ZUNE_INTERFACE_AGE`
+AC_SUBST(LT_RELEASE)
+AC_SUBST(LT_CURRENT)
+AC_SUBST(LT_REVISION)
+AC_SUBST(LT_AGE)
+
+# For automake.
+VERSION=$ZUNE_VERSION
+PACKAGE=zune
+
+# Save this value here, since automake will set cflags later
+cflags_set=${CFLAGS+set}
+
+AM_INIT_AUTOMAKE($PACKAGE, $VERSION, no-define)
+
+AM_CONFIG_HEADER(config.h)
+
+dnl Initialize libtool
+AM_PROG_LIBTOOL
+
+AC_CANONICAL_HOST
+
+dnl Check compiler environment
+AC_PROG_CC
+AC_ISC_POSIX
+AM_PROG_CC_STDC
+AC_C_CONST
+
+dnl Checks for programs.
+AC_PROG_CPP
+AC_PROG_INSTALL
+AC_PROG_MAKE_SET
+
+dnl When there will be support for several render libraries ...
+dnl AM_CONDITIONAL(WITH_IMLIB, test x$with_imlib = xyes)
+AC_DEFINE(WITH_IMLIB)
+
+AM_CONDITIONAL(WITH_GNU_MAKE, test x$with_gnu_make = xyes)
+
+AC_ARG_ENABLE(ansi, [  --enable-ansi           turn on strict ansi [default=no]],
+		    , enable_ansi=no)
+
+AC_ARG_ENABLE(debug,
+[  --enable-debug          turn on debugging [default=yes]],,enable_debug=yes)
+
+if eval "test x$enable_debug = xyes"; then
+  CFLAGS="$CFLAGS -g -Wimplicit -Wshadow"
+else
+  CFLAGS=-DG_DISABLE_CHECKS
+fi
+
+dnl Checks for libraries.
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS(fcntl.h limits.h unistd.h)
+
+dnl Check for GTK+
+AM_PATH_GTK(1.2.0,,
+  AC_MSG_ERROR(Test for GTK failed. See the file 'INSTALL' for help.))
+
+AM_PATH_GDK_IMLIB(1.9.5,,AC_MSG_ERROR(Test for gdk_imlib failed.))
+
+
+if test x$with_glib = xyes ; then
+  AC_MSG_ERROR([
+*** Directory must be specified for --with-glib])
+fi
+
+if test x$with_glib = x ; then
+  # Look for separately installed glib
+
+  AM_PATH_GLIB(1.2.0,,
+    AC_MSG_ERROR([
+*** GLIB 1.2.3 or better is required. The latest version of GLIB
+*** is always available from ftp://ftp.gtk.org/.]),
+    gmodule gthread)
+
+  # we do not want to make all gtk progs to link to thread libraries.
+  glib_cflags=`$GLIB_CONFIG glib gmodule --cflags`
+  glib_thread_cflags="$GLIB_CFLAGS"
+  glib_libs=`$GLIB_CONFIG glib gmodule --libs`
+  glib_thread_libs="$GLIB_LIBS"
+  GLIB_LIBS="$glib_libs"
+  GLIB_DEPLIBS="$glib_libs"
+else
+  # Use uninstalled glib (assume they got the version right)
+
+  GLIB_CONFIG=$with_glib/glib-config
+  if test -x $GLIB_CONFIG ; then
+    :
+  else
+    AC_MSG_ERROR([GLIB directory ($with_glib) not present or not configured])
+  fi
+
+  # For use in gtk-config
+  glib_cflags=`$GLIB_CONFIG --cflags gmodule`
+  glib_thread_cflags=`$GLIB_CONFIG --cflags gthread`
+  glib_libs=`$GLIB_CONFIG --libs gmodule`
+  glib_thread_libs=`$GLIB_CONFIG --libs gthread`
+
+  glib_release=`$GLIB_CONFIG --version | sed 's%\\.[[0-9]]*$%%'`
+
+  # canonicalize relative paths
+  case $with_glib in
+    /*)
+      glib_dir=$with_glib
+      ;;
+    *)
+      glib_dir="\$(top_builddir)/$with_glib"
+      ;;
+  esac
+
+  GLIB_CFLAGS="-I$glib_dir -I$glib_dir/gmodule"
+  GLIB_LIBS="$glib_dir/libglib.la $glib_dir/gmodule.la"
+  GLIB_DEPLIBS=
+
+fi
+
+if eval "test x$GCC = xyes"; then
+  case " $CFLAGS " in
+  *[\ \	]-Wall[\ \	]*) ;;
+  *) CFLAGS="$CFLAGS -Wall" ;;
+  esac
+
+  if test "x$enable_ansi" = "xyes"; then
+    case " $CFLAGS " in
+    *[\ \	]-ansi[\ \	]*) ;;
+    *) CFLAGS="$CFLAGS -ansi" ;;
+    esac
+
+    case " $CFLAGS " in
+    *[\ \	]-pedantic[\ \	]*) ;;
+    *) CFLAGS="$CFLAGS -pedantic" ;;
+    esac
+  fi
+fi
+
+
+AC_SUBST(CFLAGS)
+
+AC_SUBST(ZUNE_CFLAGS)
+
+dnl We don't want to link with gtk, only with gdk
+ZUNE_LIBS=`echo $GDK_IMLIB_LIBS | sed s/-lgtk//g | sed s/-rdynamic//g`
+AC_SUBST(ZUNE_LIBS)
+
+AC_SUBST(glib_cflags)
+AC_SUBST(glib_libs)
+AC_SUBST(glib_thread_cflags)
+AC_SUBST(glib_thread_libs)
+
+# Find the X11 include and library directories
+AC_PATH_X
+AC_PATH_XTRA
+
+if test "x$x_includes" = "x"; then
+  x_includes="/usr/include"
+fi
+
+AC_OUTPUT([
+zune.spec
+Makefile
+zune-config
+include/Makefile
+include/zune/Makefile
+include/priv/Makefile
+src/Makefile
+src/amilist/Makefile
+src/tagitem/Makefile
+src/muimaster/Makefile
+examples/Makefile
+doc/Makefile
+], [chmod +x zune-config])
+
+if test -f `dirname $0`/include/zune/mui.h; then
+ has_mui_h=t
+fi
+
+if test -f `dirname $0`/include/zune/muimaster_protos.h; then
+ has_muimaster_protos_h=t
+fi
+
+if test x$has_mui_h = x -o x$has_muimaster_protos_h = x; then
+echo "Be sure to get muimaster_protos.h and mui.h from mui38dev.lha !"
+echo "This archive can be found in util/libs on all Aminet mirrors"
+echo "or downloaded at the MUI site : http://www.sasg.com"
+echo "And copy the headers in `dirname $0`/include/zune/"
+echo "You can ignore this if they are already installed in your system includes."
+echo "Sorry for the inconvenience :)"
+fi
